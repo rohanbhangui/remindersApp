@@ -13,6 +13,9 @@
 		46BA04E81B2D6B9900A5AF06 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46BA04E71B2D6B9900A5AF06 /* Images.xcassets */; };
 		46BA04EB1B2D6B9900A5AF06 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46BA04E91B2D6B9900A5AF06 /* LaunchScreen.xib */; };
 		46BA04F71B2D6B9900A5AF06 /* planfmTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BA04F61B2D6B9900A5AF06 /* planfmTests.swift */; };
+		46BA05011B2D6C6A00A5AF06 /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BA05001B2D6C6A00A5AF06 /* Plan.swift */; };
+		46BCF66D1B30633F0065FBF9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46BCF66C1B30633F0065FBF9 /* MapKit.framework */; };
+		46BCF66F1B3069F00065FBF9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46BCF66E1B3069F00065FBF9 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,9 @@
 		46BA04F01B2D6B9900A5AF06 /* planfmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = planfmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46BA04F51B2D6B9900A5AF06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46BA04F61B2D6B9900A5AF06 /* planfmTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = planfmTests.swift; sourceTree = "<group>"; };
+		46BA05001B2D6C6A00A5AF06 /* Plan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
+		46BCF66C1B30633F0065FBF9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		46BCF66E1B3069F00065FBF9 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +49,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46BCF66F1B3069F00065FBF9 /* CoreLocation.framework in Frameworks */,
+				46BCF66D1B30633F0065FBF9 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +67,8 @@
 		46BA04D21B2D6B9900A5AF06 = {
 			isa = PBXGroup;
 			children = (
+				46BCF66E1B3069F00065FBF9 /* CoreLocation.framework */,
+				46BCF66C1B30633F0065FBF9 /* MapKit.framework */,
 				46BA04DD1B2D6B9900A5AF06 /* planfm */,
 				46BA04F31B2D6B9900A5AF06 /* planfmTests */,
 				46BA04DC1B2D6B9900A5AF06 /* Products */,
@@ -80,6 +90,7 @@
 				46BA04E01B2D6B9900A5AF06 /* AppDelegate.swift */,
 				46BA04E21B2D6B9900A5AF06 /* ViewController.swift */,
 				46BA04E41B2D6B9900A5AF06 /* Main.storyboard */,
+				46BA05001B2D6C6A00A5AF06 /* Plan.swift */,
 				46BA04E71B2D6B9900A5AF06 /* Images.xcassets */,
 				46BA04E91B2D6B9900A5AF06 /* LaunchScreen.xib */,
 				46BA04DE1B2D6B9900A5AF06 /* Supporting Files */,
@@ -214,6 +225,7 @@
 			files = (
 				46BA04E31B2D6B9900A5AF06 /* ViewController.swift in Sources */,
 				46BA04E11B2D6B9900A5AF06 /* AppDelegate.swift in Sources */,
+				46BA05011B2D6C6A00A5AF06 /* Plan.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +421,7 @@
 				46BA04FC1B2D6B9900A5AF06 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		46BA04FD1B2D6B9900A5AF06 /* Build configuration list for PBXNativeTarget "planfmTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +430,7 @@
 				46BA04FF1B2D6B9900A5AF06 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
