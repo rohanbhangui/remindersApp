@@ -191,7 +191,7 @@
         <!--Select Location-->
         <scene sceneID="7Mj-Tg-0an">
             <objects>
-                <viewController id="IGG-95-Sl4" customClass="ViewController" customModule="planfm" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="IGG-95-Sl4" customClass="MapViewController" customModule="planfm" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lfR-d1-zds"/>
                         <viewControllerLayoutGuide type="bottom" id="kqh-vf-xWV"/>
@@ -220,7 +220,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Select Location" id="gdg-nJ-BGp"/>
                     <connections>
-                        <outlet property="locationMapViewer" destination="KUe-KB-ijU" id="Kz4-4d-glf"/>
+                        <outlet property="locationMapViewer" destination="KUe-KB-ijU" id="8kK-Na-Te8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y3K-GT-1OE" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -12,36 +12,14 @@ import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
-    
-    
-    
-    @IBOutlet weak var locationMapViewer: MKMapView!
     @IBOutlet weak var planName: UITextField!
     @IBOutlet weak var planDateTime: UITextField!
     @IBOutlet weak var planLocation: UITextField!
     
-    var manager:CLLocationManager!
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-
-        
-        //Setup our Location Manager
-        manager = CLLocationManager()
-        manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.requestAlwaysAuthorization()
-        manager.startUpdatingLocation()
-        
-        
-        locationMapViewer.delegate = self
-        self.locationMapViewer.mapType = MKMapType.Standard
-        self.locationMapViewer.showsUserLocation = true
-        
-        
+        // Do any additional setup after loading the view, typically from a nib.        
         
         
     }

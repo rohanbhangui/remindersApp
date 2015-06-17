@@ -16,6 +16,7 @@
 		46BA05011B2D6C6A00A5AF06 /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BA05001B2D6C6A00A5AF06 /* Plan.swift */; };
 		46BCF66D1B30633F0065FBF9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46BCF66C1B30633F0065FBF9 /* MapKit.framework */; };
 		46BCF66F1B3069F00065FBF9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46BCF66E1B3069F00065FBF9 /* CoreLocation.framework */; };
+		46BCF6711B31ED4D0065FBF9 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BCF6701B31ED4D0065FBF9 /* MapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		46BA05001B2D6C6A00A5AF06 /* Plan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		46BCF66C1B30633F0065FBF9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		46BCF66E1B3069F00065FBF9 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		46BCF6701B31ED4D0065FBF9 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 				46BA04E01B2D6B9900A5AF06 /* AppDelegate.swift */,
 				46BA04E21B2D6B9900A5AF06 /* ViewController.swift */,
 				46BA04E41B2D6B9900A5AF06 /* Main.storyboard */,
+				46BCF6701B31ED4D0065FBF9 /* MapViewController.swift */,
 				46BA05001B2D6C6A00A5AF06 /* Plan.swift */,
 				46BA04E71B2D6B9900A5AF06 /* Images.xcassets */,
 				46BA04E91B2D6B9900A5AF06 /* LaunchScreen.xib */,
@@ -231,6 +234,7 @@
 				46BA04E31B2D6B9900A5AF06 /* ViewController.swift in Sources */,
 				46BA04E11B2D6B9900A5AF06 /* AppDelegate.swift in Sources */,
 				46BA05011B2D6C6A00A5AF06 /* Plan.swift in Sources */,
+				46BCF6711B31ED4D0065FBF9 /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
