@@ -220,7 +220,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Select Location" id="gdg-nJ-BGp"/>
                     <connections>
-                        <outlet property="locationMapViewer" destination="KUe-KB-ijU" id="A8p-5i-kCq"/>
+                        <outlet property="locationMapViewer" destination="KUe-KB-ijU" id="Kz4-4d-glf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y3K-GT-1OE" userLabel="First Responder" sceneMemberID="firstResponder"/>
