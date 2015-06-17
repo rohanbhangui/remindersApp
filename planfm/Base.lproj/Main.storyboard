@@ -9,7 +9,7 @@
         <!--Plan.fm-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="planfm" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="FeedController" customModule="planfm" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -53,7 +53,7 @@
         <!--Add Plan-->
         <scene sceneID="hbD-UZ-dcP">
             <objects>
-                <viewController id="wKM-ay-z9O" customClass="ViewController" customModule="planfm" customModuleProvider="target" propertyAccessControl="none" sceneMemberID="viewController">
+                <viewController id="wKM-ay-z9O" customClass="FeedController" customModule="planfm" customModuleProvider="target" propertyAccessControl="none" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6vA-Eb-bLE"/>
                         <viewControllerLayoutGuide type="bottom" id="3Uc-wu-ABI"/>
@@ -186,7 +186,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sOm-oy-IGa" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="M4v-W3-raL" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2014.5" y="361"/>
+            <point key="canvasLocation" x="2071.5" y="361"/>
         </scene>
         <!--Select Location-->
         <scene sceneID="7Mj-Tg-0an">
@@ -201,29 +201,51 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="KUe-KB-ijU">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="400" height="600"/>
-                                </variation>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="KUe-KB-ijU" secondAttribute="trailing" id="Olt-dK-ZYE"/>
+                            <constraint firstItem="KUe-KB-ijU" firstAttribute="leading" secondItem="46p-g6-N5w" secondAttribute="leading" id="nSh-Hy-ysD"/>
+                            <constraint firstItem="KUe-KB-ijU" firstAttribute="top" secondItem="46p-g6-N5w" secondAttribute="top" id="tZc-H9-r7e"/>
+                            <constraint firstItem="KUe-KB-ijU" firstAttribute="bottom" secondItem="kqh-vf-xWV" secondAttribute="top" id="teE-Ck-KXG"/>
+                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="KUe-KB-ijU"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="Olt-dK-ZYE"/>
+                                <exclude reference="nSh-Hy-ysD"/>
+                                <exclude reference="tZc-H9-r7e"/>
+                                <exclude reference="teE-Ck-KXG"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="KUe-KB-ijU"/>
                             </mask>
+                            <mask key="constraints">
+                                <include reference="Olt-dK-ZYE"/>
+                                <include reference="nSh-Hy-ysD"/>
+                                <include reference="tZc-H9-r7e"/>
+                                <include reference="teE-Ck-KXG"/>
+                            </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Select Location" id="gdg-nJ-BGp"/>
+                    <navigationItem key="navigationItem" title="Select Location" id="gdg-nJ-BGp">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="4eH-vK-lxN">
+                            <connections>
+                                <segue destination="5Wb-SX-ntA" kind="unwind" unwindAction="unwindToMainMenu:" id="Ded-OR-Sb0"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="locationMapViewer" destination="KUe-KB-ijU" id="8kK-Na-Te8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y3K-GT-1OE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="5Wb-SX-ntA" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2769" y="364"/>
         </scene>

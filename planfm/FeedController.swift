@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  FeedController.swift
 //  planfm
 //
 //  Created by Rohan Bhangui on 2015-06-14.
@@ -7,10 +7,8 @@
 //
 
 import UIKit
-import MapKit
-import CoreLocation
 
-class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+class FeedController: UIViewController {
     
     @IBOutlet weak var planName: UITextField!
     @IBOutlet weak var planDateTime: UITextField!
