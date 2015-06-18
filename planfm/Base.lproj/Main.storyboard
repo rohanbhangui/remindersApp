@@ -66,9 +66,6 @@
                                 <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="39" y="111" width="322" height="17"/>
-                                </variation>
                                 <connections>
                                     <action selector="editingWhen:" destination="wKM-ay-z9O" eventType="editingDidBegin" id="ch3-ML-a3u"/>
                                 </connections>
@@ -82,9 +79,6 @@
                                 <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="39" y="142" width="322" height="17"/>
-                                </variation>
                                 <connections>
                                     <action selector="editingWhere:" destination="wKM-ay-z9O" eventType="touchDown" id="FRQ-Xe-DyK"/>
                                 </connections>
@@ -101,9 +95,6 @@
                                         <integer key="value" value="2"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="67" y="187" width="267" height="30"/>
-                                </variation>
                                 <connections>
                                     <segue destination="M4v-W3-raL" kind="unwind" unwindAction="unwindToMainMenu:" id="pfO-Oc-M9S"/>
                                 </connections>
@@ -197,6 +188,7 @@
                         <viewControllerLayoutGuide type="bottom" id="kqh-vf-xWV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="46p-g6-N5w">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="KUe-KB-ijU">
@@ -236,7 +228,7 @@
                     <navigationItem key="navigationItem" title="Select Location" id="gdg-nJ-BGp">
                         <barButtonItem key="rightBarButtonItem" title="Save" id="4eH-vK-lxN">
                             <connections>
-                                <segue destination="5Wb-SX-ntA" kind="unwind" unwindAction="unwindToMainMenu:" id="Ded-OR-Sb0"/>
+                                <segue destination="5Wb-SX-ntA" kind="unwind" unwindAction="unwindToMainMenu:" id="5hg-0Y-KjY"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

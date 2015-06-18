@@ -14,11 +14,15 @@ class FeedController: UIViewController {
     @IBOutlet weak var planDateTime: UITextField!
     @IBOutlet weak var planLocation: UITextField!
     
+    var whereLocation: String! = ""
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.        
         
+        
+        planLocation.text = whereLocation
         
     }
 

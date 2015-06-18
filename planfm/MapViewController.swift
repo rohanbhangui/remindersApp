@@ -16,6 +16,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     @IBOutlet weak var locationMapViewer: MKMapView!
     var manager:CLLocationManager!
     
+    var locationString:String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -128,6 +130,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 println(pm.administrativeArea)
                 println(pm.country)
                 println("------------")
+                
+                self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
             }
             else
             {
@@ -138,6 +142,21 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
+        println("locationString: \(locationString)")
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!)
+        
+    {
+        if segue.identifier == "openMapViewrer"
+            
+        {
+            
+            let feedController = segue.destinationViewController as! FeedController
+            
+            feedController.whereLocation = locationString
+            
+        }
         
     }
     
