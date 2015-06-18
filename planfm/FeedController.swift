@@ -22,8 +22,6 @@ class FeedController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.        
         
         
-        planLocation.text = whereLocation!
-        
     }
 
 
@@ -58,6 +56,10 @@ class FeedController: UIViewController {
     }
     
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
+        
+        if (whereLocation != nil) {
+            planLocation.text = whereLocation!
+        }
         
     }
 

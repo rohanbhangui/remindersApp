@@ -41,7 +41,7 @@
                     <navigationItem key="navigationItem" title="Plan.fm" id="hgL-dq-Zy8">
                         <barButtonItem key="rightBarButtonItem" title="Add" id="LBg-67-Te8">
                             <connections>
-                                <segue destination="wKM-ay-z9O" kind="show" id="gA0-RM-2gL"/>
+                                <segue destination="wKM-ay-z9O" kind="show" identifier="navchange" id="gA0-RM-2gL"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

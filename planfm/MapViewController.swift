@@ -32,6 +32,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         locationMapViewer.showsUserLocation = true
         
         
+        
         let longPress = UILongPressGestureRecognizer(target: self, action: "action:")
         longPress.minimumPressDuration = 0.7
         locationMapViewer.addGestureRecognizer(longPress)
@@ -73,14 +74,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     {
         
         self.manager.stopUpdatingLocation()
-        println(placemark.locality)
-        println(placemark.thoroughfare)
-        println(placemark.postalCode)
-        println(placemark.administrativeArea)
-        println(placemark.country)
-        println("------------")
-        
-        //let userLocation = locationMapViewer.userLocation
         
         let region = MKCoordinateRegionMakeWithDistance(
             placemark.location.coordinate, 2000, 2000)
@@ -125,12 +118,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             if placemarks.count > 0
             {
                 let pm = placemarks[0] as! CLPlacemark
-                println(pm.locality)
-                println(pm.thoroughfare)
-                println(pm.postalCode)
-                println(pm.administrativeArea)
-                println(pm.country)
-                println("------------")
+                
                 
                 self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
             }
@@ -138,26 +126,22 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             {
                 println("Error with the data.")
             }
+            
         })
         
     }
     
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
-        println("locationString: \(locationString)")
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!)
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+
+        let feedController = segue.destinationViewController as! FeedController
         
-    {
-        if segue.identifier == "openMapViewer"
-            
-        {
-            println("leaving")
-            let feedController = segue.destinationViewController as! FeedController
-            
-            feedController.whereLocation = locationString
-            
-        }
+        println("\(locationString)")
+        feedController.whereLocation = locationString
+        
+        println("\(feedController.whereLocation)")
         
     }
     
