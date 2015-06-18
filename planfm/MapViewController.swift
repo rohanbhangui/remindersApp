@@ -32,6 +32,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         locationMapViewer.showsUserLocation = true
         
         
+        let longPress = UILongPressGestureRecognizer(target: self, action: "action:")
+        longPress.minimumPressDuration = 0.7
+        locationMapViewer.addGestureRecognizer(longPress)
+        
+        
     }
     
     
@@ -81,10 +86,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             placemark.location.coordinate, 2000, 2000)
         
         locationMapViewer.setRegion(region, animated: true)
-        
-        let longPress = UILongPressGestureRecognizer(target: self, action: "action:")
-        longPress.minimumPressDuration = 0.7
-        locationMapViewer.addGestureRecognizer(longPress)
     }
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!)
@@ -148,10 +149,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!)
         
     {
-        if segue.identifier == "openMapViewrer"
+        if segue.identifier == "openMapViewer"
             
         {
-            
+            println("leaving")
             let feedController = segue.destinationViewController as! FeedController
             
             feedController.whereLocation = locationString
