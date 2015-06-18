@@ -22,7 +22,7 @@ class FeedController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.        
         
         
-        //planLocation.text = whereLocation!
+        planLocation.text = whereLocation!
         
     }
 
