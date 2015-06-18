@@ -14,7 +14,7 @@ class FeedController: UIViewController {
     @IBOutlet weak var planDateTime: UITextField!
     @IBOutlet weak var planLocation: UITextField!
     
-    var whereLocation: String! = ""
+    var whereLocation: String?
     
 
     override func viewDidLoad() {
@@ -22,7 +22,7 @@ class FeedController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.        
         
         
-        //planLocation.text = whereLocation
+        //planLocation.text = whereLocation!
         
     }
 
