@@ -15,6 +15,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     @IBOutlet weak var locationMapViewer: MKMapView!
     var manager:CLLocationManager!
+    var locationStatus : NSString = "Not Started"
     
     var locationString:String!
     
@@ -26,8 +27,39 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         manager = CLLocationManager()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.requestAlwaysAuthorization()
-        manager.startUpdatingLocation()
+        
+        println("location value: \(CLLocationManager.authorizationStatus())")
+        
+        switch CLLocationManager.authorizationStatus() {
+            
+        case .NotDetermined:
+            manager.requestAlwaysAuthorization()
+            
+        case .AuthorizedWhenInUse, .Restricted, .Denied:
+            let alertController = UIAlertController(
+                title: "Background Location Access Disabled",
+                message: "In order to provide you with accurate locations, please set this app's location access to 'Always'",
+                preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            
+            let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
+                if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                    UIApplication.sharedApplication().openURL(url)
+                }
+            }
+            alertController.addAction(openAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
+        case .AuthorizedAlways:
+            manager.startUpdatingLocation()
+            
+        default:
+            manager.requestAlwaysAuthorization()
+        }
+        
         
         locationMapViewer.showsUserLocation = true
         
@@ -138,10 +170,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
 
         let feedController = segue.destinationViewController as! FeedController
         
-        println("\(locationString)")
+        //TO EXPLORE: directly set input value
         feedController.whereLocation = locationString
-        
-        println("\(feedController.whereLocation)")
         
     }
     

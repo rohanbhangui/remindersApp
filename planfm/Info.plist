@@ -23,9 +23,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>To show locations available around you</string>
+	<string>To Show what is around you and actively suggest locations</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>To show you locations available around you 2</string>
+	<string>To show what is around you</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
