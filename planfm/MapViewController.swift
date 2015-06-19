@@ -41,17 +41,20 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         locationMapViewer.addGestureRecognizer(longPress)
         
         //panning event for turning off tracking when panning map
-        let panningSwipe = UIPanGestureRecognizer(target: self, action: "panningAction:")
+        let panningSwipe = UIPanGestureRecognizer(target: self, action: "panningAction")
         
         // add gesture to mapViewer (TODO: Look into adding event using storyboard)
         locationMapViewer.addGestureRecognizer(panningSwipe)
         
         
         //panning event for turning off tracking when panning map
-        let pinchGesture = UIPinchGestureRecognizer(target: self, action: "pinchGestureAction:")
+        let rotateGesture = UIRotationGestureRecognizer(target: self, action: "rotateGestureAction")
+
         
         // add gesture to mapViewer (TODO: Look into adding event using storyboard)
-        locationMapViewer.addGestureRecognizer(pinchGesture)
+        locationMapViewer.addGestureRecognizer(rotateGesture)
+        
+        
         
         
         
@@ -134,6 +137,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             
             return pinView
     }
+    
     
     //for determining the location of the user
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)
@@ -287,7 +291,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         }
     }
     
-    func pinchGestureAction(gestureRecognizer:UIPinchGestureRecognizer) {
+    func rotateGestureAction() {
         println("triggered")
         if trackingToggle == true && trackingDirectionToggle == true {
             println("triggered panning event")
@@ -299,7 +303,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     
     //for the panning of map to prevent tracking
-    func panningAction(gestureRecognizer:UIGestureRecognizer) {
+    func panningAction() {
         println("triggered")
         if trackingToggle == true {
             println("triggered panning event")
