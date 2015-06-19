@@ -13,6 +13,7 @@ import AddressBookUI
 
 class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    @IBOutlet weak var findMeLocatorButton: UIBarButtonItem!
     
     @IBOutlet weak var locationMapViewer: MKMapView!
     var manager:CLLocationManager!
@@ -21,6 +22,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var locationString:String!
     
     var trackingToggle:Bool = false
+    var trackingDirectionToggle:Bool = false
+    var toggleOnce:Bool = true
+    
+    var findMeState:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,11 +159,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //TODO: Look into zoom in lag when focusing on region
         
         if trackingToggle == false {
-           self.manager.stopUpdatingLocation()
+            self.manager.stopUpdatingLocation()
         }
         else
         {
             self.manager.startUpdatingLocation()
+            
+            if trackingDirectionToggle == true {
+                
+                self.manager.startUpdatingHeading()
+            }
         }
         
         
@@ -269,10 +279,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
     }
     
-    //TEMP: for active tracking
-    @IBAction func activeTracking(sender: UIBarButtonItem) {
-        if trackingToggle == false {
-            trackingToggle = true
+    //for the find me button used to update location without live tracking
+    @IBAction func findMeLocator(sender: UIBarButtonItem) {
+        
+        switch findMeState {
+        case 0:
             
             CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: {(placemarks, error)->Void in
                 
@@ -293,37 +304,31 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     println("Error with the data.")
                 }
             })
-        }
-        else {
+            
+            findMeState = 1
+            findMeLocatorButton.title = "Active Track"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.Follow, animated: true)
+        case 1:
+            trackingToggle = true
+            trackingDirectionToggle = true
+            findMeState = 2
+            findMeLocatorButton.title = "Active Track w/ Pos"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.FollowWithHeading, animated: true)
+        case 2:
+            
             trackingToggle = false
+            trackingDirectionToggle = false
+            findMeState = 0
+            findMeLocatorButton.title = "Find Me"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
+            
+        default:
+            trackingToggle = false
+            trackingDirectionToggle = false
+            findMeState = 0
+            findMeLocatorButton.title = "Find Me"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
         }
-        
-    }
-    
-    //for the find me button used to update location without live tracking
-    @IBAction func findMeLocator(sender: UIBarButtonItem) {
-        
-        self.manager.startUpdatingLocation()
-        
-        CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: {(placemarks, error)->Void in
-            
-            if (error != nil)
-            {
-                println("Error: " + error.localizedDescription)
-                return
-            }
-            
-            if placemarks.count > 0
-            {
-                let pm = placemarks[0] as! CLPlacemark
-                self.displayUserLocation(pm)
-                
-            }
-            else
-            {
-                println("Error with the data.")
-            }
-        })
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {

@@ -202,12 +202,6 @@
                                             <action selector="findMeLocator:" destination="IGG-95-Sl4" id="YfH-T2-kKL"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="got-sR-xeu"/>
-                                    <barButtonItem title="Active Track" id="erp-27-Z3c">
-                                        <connections>
-                                            <action selector="activeTracking:" destination="IGG-95-Sl4" id="DQc-fX-Rgf"/>
-                                        </connections>
-                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -260,6 +254,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="findMeLocatorButton" destination="BXR-Tx-AwU" id="dro-xp-9Lg"/>
                         <outlet property="locationMapViewer" destination="KUe-KB-ijU" id="8kK-Na-Te8"/>
                     </connections>
                 </viewController>
