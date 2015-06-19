@@ -25,7 +25,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var trackingDirectionToggle:Bool = false
     var toggleOnce:Bool = true
     
-    var findMeState:Int = 0
+    var findMeState:Int = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +87,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         // add gesture to mapViewer (TODO: Look into adding event using storyboard)
         locationMapViewer.addGestureRecognizer(longPress)
         
+        //panning event for turning off tracking when panning map
+        let panning = UIPanGestureRecognizer(target: self, action: "panningAction:")
+        
+        // add gesture to mapViewer (TODO: Look into adding event using storyboard)
+        locationMapViewer.addGestureRecognizer(panning)
         
     }
     
@@ -158,17 +163,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //stop updating location of user (TODO: check if updates later on when moving; SOLUTION: leave commented if you want location to auto update)
         //TODO: Look into zoom in lag when focusing on region
         
-        if trackingToggle == false {
+        if trackingToggle == false && trackingDirectionToggle == false {
             self.manager.stopUpdatingLocation()
+            self.manager.stopUpdatingHeading()
         }
-        else
-        {
+        else if trackingToggle == true && trackingDirectionToggle == false {
             self.manager.startUpdatingLocation()
-            
-            if trackingDirectionToggle == true {
-                
-                self.manager.startUpdatingHeading()
-            }
+            self.manager.stopUpdatingHeading()
+        }
+        if trackingToggle == true && trackingDirectionToggle == true {
+            self.manager.startUpdatingLocation()
+            self.manager.startUpdatingHeading()
         }
         
         
@@ -180,6 +185,19 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         locationMapViewer.setRegion(region, animated: true)
         
         
+    }
+    
+    //for the panning of map to prevent tracking
+    func panningAction(gestureRecognizer:UIGestureRecognizer) {
+        println("triggered")
+        if trackingToggle == true {
+            println("triggered panning event")
+            trackingToggle = false
+            trackingDirectionToggle = false
+            findMeState = 0
+            findMeLocatorButton.title = "Find Me"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
+        }
     }
     
     
@@ -283,51 +301,33 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     @IBAction func findMeLocator(sender: UIBarButtonItem) {
         
         switch findMeState {
+            
+        //find me state: heading and following off
         case 0:
-            
-            CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: {(placemarks, error)->Void in
-                
-                if (error != nil)
-                {
-                    println("Error: " + error.localizedDescription)
-                    return
-                }
-                
-                if placemarks.count > 0
-                {
-                    let pm = placemarks[0] as! CLPlacemark
-                    self.displayUserLocation(pm)
-                    
-                }
-                else
-                {
-                    println("Error with the data.")
-                }
-            })
-            
+            trackingToggle = false
+            trackingDirectionToggle = false
             findMeState = 1
-            findMeLocatorButton.title = "Active Track"
-            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.Follow, animated: true)
+            findMeLocatorButton.title = "Find Me"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
+        
+        // following on heading off
         case 1:
             trackingToggle = true
-            trackingDirectionToggle = true
+            trackingDirectionToggle = false
             findMeState = 2
+            findMeLocatorButton.title = "Active Track"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.Follow, animated: true)
+            
+        //heading and following both on
+        case 2:
+            trackingToggle = true
+            trackingDirectionToggle = true
+            findMeState = 0
             findMeLocatorButton.title = "Active Track w/ Pos"
             locationMapViewer.setUserTrackingMode(MKUserTrackingMode.FollowWithHeading, animated: true)
-        case 2:
-            
-            trackingToggle = false
-            trackingDirectionToggle = false
-            findMeState = 0
-            findMeLocatorButton.title = "Find Me"
-            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
             
         default:
-            trackingToggle = false
-            trackingDirectionToggle = false
-            findMeState = 0
-            findMeLocatorButton.title = "Find Me"
-            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
+            println("println")
         }
     }
     
