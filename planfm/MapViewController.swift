@@ -176,10 +176,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             var newAnotation = MKPointAnnotation()
             newAnotation.coordinate = newCoord
             newAnotation.title = "Event Location"
-            //newAnotation.subtitle =
             
             //adding annotation
             locationMapViewer.addAnnotation(newAnotation)
+            
+            //shows annotation label automatically
+            locationMapViewer.selectAnnotation(newAnotation, animated: true)
             
             
             //convert coordinates to a CLLocation
