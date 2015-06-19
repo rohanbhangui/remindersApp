@@ -28,13 +28,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         
-        println("location value: \(CLLocationManager.authorizationStatus())")
+        //for the mapView method
+        locationMapViewer.delegate = self
         
+        //check for authority to use location services
         switch CLLocationManager.authorizationStatus() {
-            
+        
+        //if not determined request always authority
         case .NotDetermined:
             manager.requestAlwaysAuthorization()
-            
+        
+        // if authorizedwheninuse restricted or denied request a change in settings to always
         case .AuthorizedWhenInUse, .Restricted, .Denied:
             let alertController = UIAlertController(
                 title: "Background Location Access Disabled",
@@ -52,21 +56,27 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             alertController.addAction(openAction)
             
             self.presentViewController(alertController, animated: true, completion: nil)
-            
+        
+        // if already always authorized start updating
         case .AuthorizedAlways:
             manager.startUpdatingLocation()
-            
+        
+        // by default request always authorized
         default:
             manager.requestAlwaysAuthorization()
         }
         
-        
+        //show the location of user (locationManager func will take care of animation and zooming)
         locationMapViewer.showsUserLocation = true
         
         
+        //long press event added for pin drop
+        let longPress = UILongPressGestureRecognizer(target: self, action: "longPressAction:")
         
-        let longPress = UILongPressGestureRecognizer(target: self, action: "action:")
-        longPress.minimumPressDuration = 0.7
+        //time for the longpress
+        longPress.minimumPressDuration = 0.5
+        
+        // add gesture to mapViewer (TODO: Look into adding event using storyboard)
         locationMapViewer.addGestureRecognizer(longPress)
         
         
@@ -79,6 +89,32 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     
     
+    //for pin drop
+    func mapView(mapView: MKMapView!,
+        viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+            
+            if annotation is MKUserLocation {
+                //return nil so map view draws "blue dot" for standard user location
+                return nil
+            }
+            
+            //TODO: figure out what this block means
+            let reuseId = "pin"
+            var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+            if pinView == nil {
+                pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+                pinView!.canShowCallout = true
+                pinView!.animatesDrop = true
+                
+            }
+            else {
+                pinView!.annotation = annotation
+            }
+            
+            return pinView
+    }
+    
+    //for determining the location of the user
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)
     {
         
@@ -93,7 +129,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             if placemarks.count > 0
             {
                 let pm = placemarks[0] as! CLPlacemark
-                self.displayLocationInfo(pm)
+                self.displayUserLocation(pm)
             }
             else
             {
@@ -102,75 +138,90 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         })
     }
     
-    func displayLocationInfo(placemark: CLPlacemark)
-    {
-        
-        self.manager.stopUpdatingLocation()
-        
-        let region = MKCoordinateRegionMakeWithDistance(
-            placemark.location.coordinate, 2000, 2000)
-        
-        locationMapViewer.setRegion(region, animated: true)
-    }
-    
+    //in case of an error (kind of like "super" used in classes in java
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!)
     {
         println("Error: " + error.localizedDescription)
     }
     
-    func action(gestureRecognizer:UIGestureRecognizer) {
-        var touchPoint = gestureRecognizer.locationInView(self.locationMapViewer)
-        var newCoord:CLLocationCoordinate2D = locationMapViewer.convertPoint(touchPoint, toCoordinateFromView: self.locationMapViewer)
+    func displayUserLocation(placemark: CLPlacemark)
+    {
+        //stop updating location of user (TODO: check if updates later on when moving)
+        self.manager.stopUpdatingLocation()
         
-        let annotationsToRemove = self.locationMapViewer.annotations.filter { $0 !== self.locationMapViewer.userLocation }
-        locationMapViewer.removeAnnotations( annotationsToRemove )
+        //sets region to focus on for mapview
+        let region = MKCoordinateRegionMakeWithDistance(
+            placemark.location.coordinate, 2000, 2000)
         
-        var newAnotation = MKPointAnnotation()
-        newAnotation.coordinate = newCoord
-        newAnotation.title = "Event Location"
-        //newAnotation.subtitle = "New Subtitle"
-        
-        locationMapViewer.addAnnotation(newAnotation)
-        
-        var getLat: CLLocationDegrees = newAnotation.coordinate.latitude
-        var getLon: CLLocationDegrees = newAnotation.coordinate.longitude
-        
-        
-        var pinLocation: CLLocation =  CLLocation(latitude: getLat, longitude: getLon)
-        
-        
-        CLGeocoder().reverseGeocodeLocation(pinLocation, completionHandler: {(placemarks, error)->Void in
-            
-            if (error != nil)
-            {
-                println("Error: " + error.localizedDescription)
-                return
-            }
-            
-            if placemarks.count > 0
-            {
-                let pm = placemarks[0] as! CLPlacemark
-                
-                
-                self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
-            }
-            else
-            {
-                println("Error with the data.")
-            }
-            
-        })
-        
+        //animates the "zooming" and "panning" to the region to focus on
+        locationMapViewer.setRegion(region, animated: true)
     }
     
+    
+    //longpress action for pin drop
+    func longPressAction(gestureRecognizer:UIGestureRecognizer) {
+        
+        //to do it at the start of tht event
+        if gestureRecognizer.state == .Began {
+            
+            //to remove all existing pin drops
+            let annotationsToRemove = self.locationMapViewer.annotations.filter { $0 !== self.locationMapViewer.userLocation }
+            locationMapViewer.removeAnnotations( annotationsToRemove )
+            
+            //get the touch event and convert to coordinates (lat and long)
+            var touchPoint = gestureRecognizer.locationInView(self.locationMapViewer)
+            var newCoord:CLLocationCoordinate2D = locationMapViewer.convertPoint(touchPoint, toCoordinateFromView: self.locationMapViewer)
+            
+            //annotation generation
+            var newAnotation = MKPointAnnotation()
+            newAnotation.coordinate = newCoord
+            newAnotation.title = "Event Location"
+            //newAnotation.subtitle =
+            
+            //adding annotation
+            locationMapViewer.addAnnotation(newAnotation)
+            
+            
+            //convert coordinates to a CLLocation
+            var getLat: CLLocationDegrees = newAnotation.coordinate.latitude
+            var getLon: CLLocationDegrees = newAnotation.coordinate.longitude
+            
+            var pinLocation: CLLocation =  CLLocation(latitude: getLat, longitude: getLon)
+            
+            //Reverse Geo decoder (convert coordinates to nearest(?) address
+            CLGeocoder().reverseGeocodeLocation(pinLocation, completionHandler: {(placemarks, error)->Void in
+                
+                if (error != nil)
+                {
+                    println("Error: " + error.localizedDescription)
+                    return
+                }
+                
+                if placemarks.count > 0
+                {
+                    let pm = placemarks[0] as! CLPlacemark
+                    
+                    //generate location string
+                    self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
+                }
+                else
+                {
+                    println("Error with the data.")
+                }
+            })
+        }
+    }
+    
+    //unwind event (does nothing as unwind is controlled in FeedController.swift)
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-
+        
         let feedController = segue.destinationViewController as! FeedController
         
         //TO EXPLORE: directly set input value
+        //currently sets variable in FeedController.swift file which is used my UITextField
         feedController.whereLocation = locationString
         
     }
