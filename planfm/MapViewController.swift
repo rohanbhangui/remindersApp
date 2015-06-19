@@ -131,6 +131,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             {
                 let pm = placemarks[0] as! CLPlacemark
                 self.displayUserLocation(pm)
+                
             }
             else
             {
@@ -148,7 +149,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     func displayUserLocation(placemark: CLPlacemark)
     {
         //stop updating location of user (TODO: check if updates later on when moving; SOLUTION: leave commented if you want location to auto update)
-        //self.manager.stopUpdatingLocation()
+        //TODO: Look into zoom in lag when focusing on region
+        self.manager.stopUpdatingLocation()
         
         //sets region to focus on for mapview
         let region = MKCoordinateRegionMakeWithDistance(
@@ -156,6 +158,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         //animates the "zooming" and "panning" to the region to focus on
         locationMapViewer.setRegion(region, animated: true)
+        
+        
     }
     
     
@@ -214,23 +218,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     var inputString = "\(pm.areasOfInterest[0])"
                     var countArr = pm.areasOfInterest.count
                     var areasOfInterestBool: Bool = false
-                    var areasOfInterestStr: String = ""
-                    
-                    println("raw input: \(pm.areasOfInterest)")
-                    println("inputString: \(inputString)")
                     
                     if countArr > 1 {
-                        areasOfInterestStr = inputString
                         areasOfInterestBool = true
                     }
-                    
-                    println("areas of interest: \(areasOfInterestStr)")
                     
                     if areasOfInterestBool == false {
                         self.locationString = "\(address)"
                     }
                     else {
-                        self.locationString = "\(areasOfInterestStr) (\(address))"
+                        self.locationString = "\(inputString) (\(address))"
                     }
                 }
                 else
@@ -243,6 +240,33 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     //unwind event (does nothing as unwind is controlled in FeedController.swift)
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
+    }
+    
+    //for the find me button used to update location without live tracking
+    @IBAction func findMeLocator(sender: UIBarButtonItem) {
+        println("clicked find me")
+        
+        self.manager.startUpdatingLocation()
+        
+        CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: {(placemarks, error)->Void in
+            
+            if (error != nil)
+            {
+                println("Error: " + error.localizedDescription)
+                return
+            }
+            
+            if placemarks.count > 0
+            {
+                let pm = placemarks[0] as! CLPlacemark
+                self.displayUserLocation(pm)
+                
+            }
+            else
+            {
+                println("Error with the data.")
+            }
+        })
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {

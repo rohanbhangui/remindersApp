@@ -194,19 +194,36 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="KUe-KB-ijU">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                             </mapView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xcd-tH-wOv">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <items>
+                                    <barButtonItem title="Find Me" id="BXR-Tx-AwU">
+                                        <connections>
+                                            <action selector="findMeLocator:" destination="IGG-95-Sl4" id="YfH-T2-kKL"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Xcd-tH-wOv" firstAttribute="leading" secondItem="KUe-KB-ijU" secondAttribute="leading" id="5SU-aS-xLN"/>
                             <constraint firstAttribute="trailing" secondItem="KUe-KB-ijU" secondAttribute="trailing" id="Olt-dK-ZYE"/>
+                            <constraint firstItem="Xcd-tH-wOv" firstAttribute="trailing" secondItem="KUe-KB-ijU" secondAttribute="trailing" id="Pxh-88-mC5"/>
                             <constraint firstItem="KUe-KB-ijU" firstAttribute="leading" secondItem="46p-g6-N5w" secondAttribute="leading" id="nSh-Hy-ysD"/>
+                            <constraint firstItem="Xcd-tH-wOv" firstAttribute="bottom" secondItem="kqh-vf-xWV" secondAttribute="top" id="sHh-rt-zxU"/>
                             <constraint firstItem="KUe-KB-ijU" firstAttribute="top" secondItem="46p-g6-N5w" secondAttribute="top" id="tZc-H9-r7e"/>
                             <constraint firstItem="KUe-KB-ijU" firstAttribute="bottom" secondItem="kqh-vf-xWV" secondAttribute="top" id="teE-Ck-KXG"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="KUe-KB-ijU"/>
+                                <exclude reference="Xcd-tH-wOv"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="5SU-aS-xLN"/>
+                                <exclude reference="Pxh-88-mC5"/>
+                                <exclude reference="sHh-rt-zxU"/>
                                 <exclude reference="Olt-dK-ZYE"/>
                                 <exclude reference="nSh-Hy-ysD"/>
                                 <exclude reference="tZc-H9-r7e"/>
@@ -216,8 +233,12 @@
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="KUe-KB-ijU"/>
+                                <include reference="Xcd-tH-wOv"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="5SU-aS-xLN"/>
+                                <include reference="Pxh-88-mC5"/>
+                                <include reference="sHh-rt-zxU"/>
                                 <include reference="Olt-dK-ZYE"/>
                                 <include reference="nSh-Hy-ysD"/>
                                 <include reference="tZc-H9-r7e"/>
