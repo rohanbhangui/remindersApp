@@ -228,6 +228,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     
                     //self.locationString = "\(pm.areasOfInterest[0])"
                     
+                    println("\(pm.areasOfInterest)")
+                    
                     
                     var areasOfInterestBool: Bool = false
                     var inputString = ""
@@ -241,11 +243,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                         }
                         else {
                             inputString = "\(pm.areasOfInterest[0])"
-                        }
-                        
-                        
-                        
-                        if arrCount > 1 {
                             areasOfInterestBool = true
                         }
                     }
@@ -257,6 +254,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     else {
                         self.locationString = "\(inputString) (\(address))"
                     }
+                    
+                    println("location: \(self.locationString)")
                 }
                 else
                 {
