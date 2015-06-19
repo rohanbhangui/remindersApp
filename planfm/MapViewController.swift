@@ -20,6 +20,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     var locationString:String!
     
+    var trackingToggle:Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -150,7 +152,15 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     {
         //stop updating location of user (TODO: check if updates later on when moving; SOLUTION: leave commented if you want location to auto update)
         //TODO: Look into zoom in lag when focusing on region
-        self.manager.stopUpdatingLocation()
+        
+        if trackingToggle == false {
+           self.manager.stopUpdatingLocation()
+        }
+        else
+        {
+            self.manager.startUpdatingLocation()
+        }
+        
         
         //sets region to focus on for mapview
         let region = MKCoordinateRegionMakeWithDistance(
@@ -185,6 +195,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             //adding annotation
             locationMapViewer.addAnnotation(newAnotation)
             
+            //when pin is placed stop tracking user actively
+            trackingToggle = false
+            
             //shows annotation label automatically
             locationMapViewer.selectAnnotation(newAnotation, animated: true)
             
@@ -214,8 +227,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     //self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
                     
                     //self.locationString = "\(pm.areasOfInterest[0])"
-                    
-                    println("\(pm.areasOfInterest)")
                     
                     
                     var areasOfInterestBool: Bool = false
@@ -259,9 +270,39 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
     }
     
+    //TEMP: for active tracking
+    @IBAction func activeTracking(sender: UIBarButtonItem) {
+        if trackingToggle == false {
+            trackingToggle = true
+            
+            CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: {(placemarks, error)->Void in
+                
+                if (error != nil)
+                {
+                    println("Error: " + error.localizedDescription)
+                    return
+                }
+                
+                if placemarks.count > 0
+                {
+                    let pm = placemarks[0] as! CLPlacemark
+                    self.displayUserLocation(pm)
+                    
+                }
+                else
+                {
+                    println("Error with the data.")
+                }
+            })
+        }
+        else {
+            trackingToggle = false
+        }
+        
+    }
+    
     //for the find me button used to update location without live tracking
     @IBAction func findMeLocator(sender: UIBarButtonItem) {
-        println("clicked find me")
         
         self.manager.startUpdatingLocation()
         
