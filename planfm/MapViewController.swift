@@ -31,6 +31,30 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        //long press event added for pin drop
+        let longPress = UILongPressGestureRecognizer(target: self, action: "longPressAction:")
+        
+        //time for the longpress
+        longPress.minimumPressDuration = 0.5
+        
+        // add gesture to mapViewer (TODO: Look into adding event using storyboard)
+        locationMapViewer.addGestureRecognizer(longPress)
+        
+        //panning event for turning off tracking when panning map
+        let panningSwipe = UIPanGestureRecognizer(target: self, action: "panningAction:")
+        
+        // add gesture to mapViewer (TODO: Look into adding event using storyboard)
+        locationMapViewer.addGestureRecognizer(panningSwipe)
+        
+        
+        //panning event for turning off tracking when panning map
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: "pinchGestureAction:")
+        
+        // add gesture to mapViewer (TODO: Look into adding event using storyboard)
+        locationMapViewer.addGestureRecognizer(pinchGesture)
+        
+        
+        
         //Setup our Location Manager
         manager = CLLocationManager()
         manager.delegate = self
@@ -76,22 +100,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         //show the location of user (locationManager func will take care of animation and zooming)
         locationMapViewer.showsUserLocation = true
-        
-        
-        //long press event added for pin drop
-        let longPress = UILongPressGestureRecognizer(target: self, action: "longPressAction:")
-        
-        //time for the longpress
-        longPress.minimumPressDuration = 0.5
-        
-        // add gesture to mapViewer (TODO: Look into adding event using storyboard)
-        locationMapViewer.addGestureRecognizer(longPress)
-        
-        //panning event for turning off tracking when panning map
-        let panning = UIPanGestureRecognizer(target: self, action: "panningAction:")
-        
-        // add gesture to mapViewer (TODO: Look into adding event using storyboard)
-        locationMapViewer.addGestureRecognizer(panning)
         
     }
     
@@ -187,22 +195,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
     }
     
-    //for the panning of map to prevent tracking
-    func panningAction(gestureRecognizer:UIGestureRecognizer) {
-        println("triggered")
-        if trackingToggle == true {
-            println("triggered panning event")
-            trackingToggle = false
-            trackingDirectionToggle = false
-            findMeState = 0
-            findMeLocatorButton.title = "Find Me"
-            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
-        }
-    }
-    
-    
     //longpress action for pin drop
-    func longPressAction(gestureRecognizer:UIGestureRecognizer) {
+    func longPressAction(gestureRecognizer:UILongPressGestureRecognizer) {
         
         //to do it at the start of tht event
         if gestureRecognizer.state == .Began {
@@ -293,6 +287,31 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         }
     }
     
+    func pinchGestureAction(gestureRecognizer:UIPinchGestureRecognizer) {
+        println("triggered")
+        if trackingToggle == true && trackingDirectionToggle == true {
+            println("triggered panning event")
+            trackingDirectionToggle = false
+            findMeState = 2
+            findMeLocatorButton.title = "Active Track"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.Follow, animated: true)
+        }
+    }
+    
+    //for the panning of map to prevent tracking
+    func panningAction(gestureRecognizer:UIGestureRecognizer) {
+        println("triggered")
+        if trackingToggle == true {
+            println("triggered panning event")
+            trackingToggle = false
+            trackingDirectionToggle = false
+            findMeState = 0
+            findMeLocatorButton.title = "Find Me"
+            locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
+        }
+    }
+
+    
     //unwind event (does nothing as unwind is controlled in FeedController.swift)
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
     }
@@ -313,14 +332,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         // following on heading off
         case 1:
             trackingToggle = true
-            trackingDirectionToggle = false
             findMeState = 2
             findMeLocatorButton.title = "Active Track"
             locationMapViewer.setUserTrackingMode(MKUserTrackingMode.Follow, animated: true)
             
         //heading and following both on
         case 2:
-            trackingToggle = true
             trackingDirectionToggle = true
             findMeState = 0
             findMeLocatorButton.title = "Active Track w/ Pos"
