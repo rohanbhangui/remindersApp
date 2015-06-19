@@ -215,13 +215,30 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     
                     //self.locationString = "\(pm.areasOfInterest[0])"
                     
-                    var inputString = "\(pm.areasOfInterest[0])"
-                    var countArr = pm.areasOfInterest.count
-                    var areasOfInterestBool: Bool = false
+                    println("\(pm.areasOfInterest)")
                     
-                    if countArr > 1 {
-                        areasOfInterestBool = true
+                    
+                    var areasOfInterestBool: Bool = false
+                    var inputString = ""
+                    
+                    // if you select roads surrounding apple HQ produced nil error. Below checks for that
+                    if pm.areasOfInterest != nil {
+                        
+                        var arrCount = pm.areasOfInterest.count
+                        if arrCount == 0 {
+                            inputString = ""
+                        }
+                        else {
+                            inputString = "\(pm.areasOfInterest[0])"
+                        }
+                        
+                        
+                        
+                        if arrCount > 1 {
+                            areasOfInterestBool = true
+                        }
                     }
+                    
                     
                     if areasOfInterestBool == false {
                         self.locationString = "\(address)"
