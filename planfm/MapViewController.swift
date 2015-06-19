@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import AddressBookUI
 
 class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
@@ -146,8 +147,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     func displayUserLocation(placemark: CLPlacemark)
     {
-        //stop updating location of user (TODO: check if updates later on when moving)
-        self.manager.stopUpdatingLocation()
+        //stop updating location of user (TODO: check if updates later on when moving; SOLUTION: leave commented if you want location to auto update)
+        //self.manager.stopUpdatingLocation()
         
         //sets region to focus on for mapview
         let region = MKCoordinateRegionMakeWithDistance(
@@ -203,8 +204,34 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 {
                     let pm = placemarks[0] as! CLPlacemark
                     
-                    //generate location string
-                    self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
+                    let address = ABCreateStringWithAddressDictionary(pm.addressDictionary, false);
+                    
+                    //generate location string (REMOVE: OUTDATED)
+                    //self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
+                    
+                    //self.locationString = "\(pm.areasOfInterest[0])"
+                    
+                    var inputString = "\(pm.areasOfInterest[0])"
+                    var countArr = pm.areasOfInterest.count
+                    var areasOfInterestBool: Bool = false
+                    var areasOfInterestStr: String = ""
+                    
+                    println("raw input: \(pm.areasOfInterest)")
+                    println("inputString: \(inputString)")
+                    
+                    if countArr > 1 {
+                        areasOfInterestStr = inputString
+                        areasOfInterestBool = true
+                    }
+                    
+                    println("areas of interest: \(areasOfInterestStr)")
+                    
+                    if areasOfInterestBool == false {
+                        self.locationString = "\(address)"
+                    }
+                    else {
+                        self.locationString = "\(areasOfInterestStr) (\(address))"
+                    }
                 }
                 else
                 {
