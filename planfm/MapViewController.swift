@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import AddressBookUI
 
-class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var findMeLocatorButton: UIBarButtonItem!
     
@@ -26,7 +26,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var toggleOnce:Bool = true
     
     var findMeState:Int = 1
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -34,8 +34,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //long press event added for pin drop
         let longPress = UILongPressGestureRecognizer(target: self, action: "longPressAction:")
         
+        longPress.delegate = self
+        
         //time for the longpress
-        longPress.minimumPressDuration = 0.5
+        longPress.minimumPressDuration = 0.75
         
         // add gesture to mapViewer (TODO: Look into adding event using storyboard)
         locationMapViewer.addGestureRecognizer(longPress)
@@ -43,16 +45,22 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //panning event for turning off tracking when panning map
         let panningSwipe = UIPanGestureRecognizer(target: self, action: "panningAction")
         
+        panningSwipe.delegate = self
+        
         // add gesture to mapViewer (TODO: Look into adding event using storyboard)
         locationMapViewer.addGestureRecognizer(panningSwipe)
         
         
         //panning event for turning off tracking when panning map
         let rotateGesture = UIRotationGestureRecognizer(target: self, action: "rotateGestureAction")
+        
+        rotateGesture.delegate = self
 
         
         // add gesture to mapViewer (TODO: Look into adding event using storyboard)
         locationMapViewer.addGestureRecognizer(rotateGesture)
+        
+        panningSwipe.requireGestureRecognizerToFail(longPress)
         
         
         
@@ -138,6 +146,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             return pinView
     }
     
+    //by default UIGR does not recognize simultaneous gestures and so the bool must be changed
+    func gestureRecognizer(UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
+            return true
+    }
     
     //for determining the location of the user
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)
@@ -205,6 +218,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //to do it at the start of tht event
         if gestureRecognizer.state == .Began {
             
+            panningAction()
+            
+            locationMapViewer.scrollEnabled = false
+            
             //to remove all existing pin drops
             let annotationsToRemove = self.locationMapViewer.annotations.filter { $0 !== self.locationMapViewer.userLocation }
             locationMapViewer.removeAnnotations( annotationsToRemove )
@@ -221,12 +238,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             //adding annotation
             locationMapViewer.addAnnotation(newAnotation)
             
-            //when pin is placed stop tracking user actively
-            trackingToggle = false
-            
             //shows annotation label automatically
             locationMapViewer.selectAnnotation(newAnotation, animated: true)
-            
             
             //convert coordinates to a CLLocation
             var getLat: CLLocationDegrees = newAnotation.coordinate.latitude
@@ -289,12 +302,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 }
             })
         }
+        
+        //prevent panning once pin is dropped (simultaneous gestures bool set to true messes with the annotation label showing
+        else if gestureRecognizer.state == .Ended {
+            locationMapViewer.scrollEnabled = false
+        }
     }
     
+    //active when rotate gesture is captured and tracking is on
     func rotateGestureAction() {
-        println("triggered")
+        
         if trackingToggle == true && trackingDirectionToggle == true {
-            println("triggered panning event")
             trackingDirectionToggle = false
             findMeState = 2
             findMeLocatorButton.title = "Active Track"
@@ -302,14 +320,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         }
     }
     
-    //for the panning of map to prevent tracking
-    func panningAction() {
-        println("triggered")
+    //for the panning of map if tracking is enabled
+    func panningAction( ) {
         if trackingToggle == true {
-            println("triggered panning event")
             trackingToggle = false
             trackingDirectionToggle = false
-            findMeState = 0
+            findMeState = 1
             findMeLocatorButton.title = "Find Me"
             locationMapViewer.setUserTrackingMode(MKUserTrackingMode.None, animated: true)
         }
