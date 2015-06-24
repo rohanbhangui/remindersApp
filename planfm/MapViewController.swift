@@ -310,7 +310,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             })
             
             //shows annotation label automatically (temporarily disabled pending callout hidden on animate)
-            locationMapViewer.selectAnnotation(newAnotation, animated: true)
+            //locationMapViewer.selectAnnotation(newAnotation, animated: true)
         }
         
         //prevent panning once pin is dropped (simultaneous gestures bool set to true messes with the annotation label showing
