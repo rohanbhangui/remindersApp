@@ -26,7 +26,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var toggleOnce:Bool = true
     
     var findMeState:Int = 1
-
+    
+    let longPress = UILongPressGestureRecognizer()
+    let panningSwipe = UIPanGestureRecognizer()
+    let rotateGesture = UIRotationGestureRecognizer()
+    
+    var newAnotation = MKPointAnnotation()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -222,6 +228,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             
             locationMapViewer.scrollEnabled = false
             
+            locationMapViewer.removeGestureRecognizer(rotateGesture)
+            locationMapViewer.removeGestureRecognizer(panningSwipe)
+            
             //to remove all existing pin drops
             let annotationsToRemove = self.locationMapViewer.annotations.filter { $0 !== self.locationMapViewer.userLocation }
             locationMapViewer.removeAnnotations( annotationsToRemove )
@@ -231,15 +240,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             var newCoord:CLLocationCoordinate2D = locationMapViewer.convertPoint(touchPoint, toCoordinateFromView: self.locationMapViewer)
             
             //annotation generation
-            var newAnotation = MKPointAnnotation()
+            newAnotation = MKPointAnnotation()
             newAnotation.coordinate = newCoord
             newAnotation.title = "Event Location"
             
             //adding annotation
             locationMapViewer.addAnnotation(newAnotation)
             
-            //shows annotation label automatically
-            locationMapViewer.selectAnnotation(newAnotation, animated: true)
             
             //convert coordinates to a CLLocation
             var getLat: CLLocationDegrees = newAnotation.coordinate.latitude
@@ -301,11 +308,18 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     println("Error with the data.")
                 }
             })
+            
+            //shows annotation label automatically
+            locationMapViewer.selectAnnotation(newAnotation, animated: true)
         }
         
         //prevent panning once pin is dropped (simultaneous gestures bool set to true messes with the annotation label showing
-        else if gestureRecognizer.state == .Ended {
-            locationMapViewer.scrollEnabled = false
+        else if gestureRecognizer.state == .Cancelled {
+            println("cancelled touches")
+            locationMapViewer.addGestureRecognizer(rotateGesture)
+            locationMapViewer.addGestureRecognizer(panningSwipe)
+            locationMapViewer.scrollEnabled = true
+            
         }
     }
     
