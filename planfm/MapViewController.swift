@@ -309,12 +309,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 }
             })
             
-            //shows annotation label automatically
+            //shows annotation label automatically (temporarily disabled pending callout hidden on animate)
             locationMapViewer.selectAnnotation(newAnotation, animated: true)
         }
         
         //prevent panning once pin is dropped (simultaneous gestures bool set to true messes with the annotation label showing
-        else if gestureRecognizer.state == .Cancelled {
+        else if gestureRecognizer.state == .Ended {
             println("cancelled touches")
             locationMapViewer.addGestureRecognizer(rotateGesture)
             locationMapViewer.addGestureRecognizer(panningSwipe)
