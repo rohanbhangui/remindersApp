@@ -33,6 +33,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     var newAnotation = MKPointAnnotation()
     
+    var annotationDragState:Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -43,7 +45,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         longPress.delegate = self
         
         //time for the longpress
-        longPress.minimumPressDuration = 0.75
+        //longPress.minimumPressDuration = 0.75
         
         // add gesture to mapViewer (TODO: Look into adding event using storyboard)
         locationMapViewer.addGestureRecognizer(longPress)
@@ -67,9 +69,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         locationMapViewer.addGestureRecognizer(rotateGesture)
         
         panningSwipe.requireGestureRecognizerToFail(longPress)
-        
-        
-        
         
         
         //Setup our Location Manager
@@ -143,6 +142,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
                 pinView!.canShowCallout = true
                 pinView!.animatesDrop = true
+                pinView!.draggable = true
                 
             }
             else {
@@ -152,12 +152,102 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             return pinView
     }
     
-    //by default UIGR does not recognize simultaneous gestures and so the bool must be changed
-    func gestureRecognizer(UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
-            return true
+    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        if newState == MKAnnotationViewDragState.Dragging {
+            println("dragging")
+        }
+        
+        if newState == MKAnnotationViewDragState.Ending {
+            println("ending drag")
+            
+            annotationDragState = false
+            
+            //convert coordinates to a CLLocation
+            var getLat: CLLocationDegrees = newAnotation.coordinate.latitude
+            var getLon: CLLocationDegrees = newAnotation.coordinate.longitude
+            
+            var pinLocation: CLLocation =  CLLocation(latitude: getLat, longitude: getLon)
+            
+            //Reverse Geo decoder (convert coordinates to nearest(?) address
+            CLGeocoder().reverseGeocodeLocation(pinLocation, completionHandler: {(placemarks, error)->Void in
+                
+                if (error != nil)
+                {
+                    println("Error: " + error.localizedDescription)
+                    return
+                }
+                
+                if placemarks.count > 0
+                {
+                    let pm = placemarks[0] as! CLPlacemark
+                    
+                    let address = ABCreateStringWithAddressDictionary(pm.addressDictionary, false);
+                    
+                    //generate location string (REMOVE: OUTDATED)
+                    //self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
+                    
+                    //self.locationString = "\(pm.areasOfInterest[0])"
+                    
+                    println("\(pm.areasOfInterest)")
+                    
+                    
+                    var areasOfInterestBool: Bool = false
+                    var inputString = ""
+                    
+                    // if you select roads surrounding apple HQ produced nil error. Below checks for that
+                    if pm.areasOfInterest != nil {
+                        
+                        var arrCount = pm.areasOfInterest.count
+                        if arrCount == 0 {
+                            inputString = ""
+                        }
+                        else {
+                            inputString = "\(pm.areasOfInterest[0])"
+                            areasOfInterestBool = true
+                        }
+                    }
+                    
+                    
+                    if areasOfInterestBool == false {
+                        self.locationString = "\(address)"
+                    }
+                    else {
+                        self.locationString = "\(inputString) (\(address))"
+                    }
+                    
+                    println("location: \(self.locationString)")
+                }
+                else
+                {
+                    println("Error with the data.")
+                }
+            })
+            
+            //shows annotation label automatically (temporarily disabled pending callout hidden on animate)
+            locationMapViewer.selectAnnotation(newAnotation, animated: true)
+            
+        }
+        
+        if newState == MKAnnotationViewDragState.Starting {
+            println("start drag")
+            
+            annotationDragState = true
+
+        }
+        
     }
     
+    //by default UIGR does not recognize simultaneous gestures and so the bool must be changed
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            
+        if gestureRecognizer is UILongPressGestureRecognizer {
+            return false
+        }
+        else {
+            return true
+        }
+    }
+
     //for determining the location of the user
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)
     {
@@ -222,7 +312,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     func longPressAction(gestureRecognizer:UILongPressGestureRecognizer) {
         
         //to do it at the start of tht event
-        if gestureRecognizer.state == .Began {
+        if gestureRecognizer.state == .Began && annotationDragState == false {
             
             panningAction()
             
@@ -308,9 +398,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     println("Error with the data.")
                 }
             })
-            
-            //shows annotation label automatically (temporarily disabled pending callout hidden on animate)
-            //locationMapViewer.selectAnnotation(newAnotation, animated: true)
         }
         
         //prevent panning once pin is dropped (simultaneous gestures bool set to true messes with the annotation label showing
@@ -321,6 +408,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             locationMapViewer.scrollEnabled = true
             
         }
+        
+        //shows annotation label automatically (temporarily disabled pending callout hidden on animate)
+        locationMapViewer.selectAnnotation(newAnotation, animated: true)
     }
     
     //active when rotate gesture is captured and tracking is on
@@ -345,7 +435,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         }
     }
 
-    
     //unwind event (does nothing as unwind is controlled in FeedController.swift)
     @IBAction func unwindToMainMenu(segue: UIStoryboardSegue) {
     }
