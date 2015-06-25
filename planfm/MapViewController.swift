@@ -45,7 +45,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         longPress.delegate = self
         
         //time for the longpress
-        //longPress.minimumPressDuration = 0.75
+        longPress.minimumPressDuration = 0.75
         
         // add gesture to mapViewer (TODO: Look into adding event using storyboard)
         locationMapViewer.addGestureRecognizer(longPress)
@@ -153,6 +153,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        
+        if newState == MKAnnotationViewDragState.Starting {
+            println("start drag")
+            
+            annotationDragState = true
+            
+        }
+        
         if newState == MKAnnotationViewDragState.Dragging {
             println("dragging")
         }
@@ -182,11 +190,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     let pm = placemarks[0] as! CLPlacemark
                     
                     let address = ABCreateStringWithAddressDictionary(pm.addressDictionary, false);
-                    
-                    //generate location string (REMOVE: OUTDATED)
-                    //self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
-                    
-                    //self.locationString = "\(pm.areasOfInterest[0])"
                     
                     println("\(pm.areasOfInterest)")
                     
@@ -226,13 +229,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             //shows annotation label automatically (temporarily disabled pending callout hidden on animate)
             locationMapViewer.selectAnnotation(newAnotation, animated: true)
             
-        }
-        
-        if newState == MKAnnotationViewDragState.Starting {
-            println("start drag")
-            
-            annotationDragState = true
-
         }
         
     }
@@ -281,7 +277,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     func displayUserLocation(placemark: CLPlacemark)
     {
-        //stop updating location of user (TODO: check if updates later on when moving; SOLUTION: leave commented if you want location to auto update)
         //TODO: Look into zoom in lag when focusing on region
         
         if trackingToggle == false && trackingDirectionToggle == false {
@@ -316,8 +311,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             
             panningAction()
             
+            //disable rotate and panning events when long pressing
             locationMapViewer.scrollEnabled = false
-            
             locationMapViewer.removeGestureRecognizer(rotateGesture)
             locationMapViewer.removeGestureRecognizer(panningSwipe)
             
@@ -333,6 +328,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             newAnotation = MKPointAnnotation()
             newAnotation.coordinate = newCoord
             newAnotation.title = "Event Location"
+            
+            
+            //shows annotation label automatically (temporarily disabled pending callout hidden on animate)
+            locationMapViewer.selectAnnotation(newAnotation, animated: true)
             
             //adding annotation
             locationMapViewer.addAnnotation(newAnotation)
@@ -358,11 +357,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     let pm = placemarks[0] as! CLPlacemark
                     
                     let address = ABCreateStringWithAddressDictionary(pm.addressDictionary, false);
-                    
-                    //generate location string (REMOVE: OUTDATED)
-                    //self.locationString = "\(pm.thoroughfare) \(pm.postalCode) \(pm.locality), \(pm.country)"
-                    
-                    //self.locationString = "\(pm.areasOfInterest[0])"
                     
                     println("\(pm.areasOfInterest)")
                     
@@ -400,7 +394,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             })
         }
         
-        //prevent panning once pin is dropped (simultaneous gestures bool set to true messes with the annotation label showing
+        //renable the panning and rotate gestures on the end state of the longpress event
         else if gestureRecognizer.state == .Ended {
             println("cancelled touches")
             locationMapViewer.addGestureRecognizer(rotateGesture)
@@ -408,9 +402,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             locationMapViewer.scrollEnabled = true
             
         }
-        
-        //shows annotation label automatically (temporarily disabled pending callout hidden on animate)
-        locationMapViewer.selectAnnotation(newAnotation, animated: true)
     }
     
     //active when rotate gesture is captured and tracking is on
