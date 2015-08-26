@@ -219,6 +219,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     }
                     
                     println("location: \(self.locationString)")
+                    self.newAnotation.title = self.locationString
                 }
                 else
                 {
@@ -325,7 +326,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             var newCoord:CLLocationCoordinate2D = locationMapViewer.convertPoint(touchPoint, toCoordinateFromView: self.locationMapViewer)
             
             //annotation generation
-            newAnotation = MKPointAnnotation()
             newAnotation.coordinate = newCoord
             newAnotation.title = "Event Location"
             
@@ -386,6 +386,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     }
                     
                     println("location: \(self.locationString)")
+                    self.newAnotation.title = self.locationString
                 }
                 else
                 {
