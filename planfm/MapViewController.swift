@@ -127,8 +127,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     
     //for pin drop
-    func mapView(mapView: MKMapView!,
-        viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView,
+        viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView! {
             
             if annotation is MKUserLocation {
                 //return nil so map view draws "blue dot" for standard user location
@@ -152,21 +152,21 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             return pinView
     }
     
-    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
         
         if newState == MKAnnotationViewDragState.Starting {
-            println("start drag")
+            print("start drag")
             
             annotationDragState = true
             
         }
         
         if newState == MKAnnotationViewDragState.Dragging {
-            println("dragging")
+            print("dragging")
         }
         
         if newState == MKAnnotationViewDragState.Ending {
-            println("ending drag")
+            print("ending drag")
             
             annotationDragState = false
             
@@ -181,17 +181,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 
                 if (error != nil)
                 {
-                    println("Error: " + error.localizedDescription)
+                    print("Error: " + error!.localizedDescription)
                     return
                 }
                 
-                if placemarks.count > 0
+                if placemarks!.count > 0
                 {
-                    let pm = placemarks[0] as! CLPlacemark
+                    let pm = placemarks![0] as! CLPlacemark
                     
-                    let address = ABCreateStringWithAddressDictionary(pm.addressDictionary, false);
+                    let address = ABCreateStringWithAddressDictionary(pm.addressDictionary!,!false);
                     
-                    println("\(pm.areasOfInterest)")
+                    print("\(pm.areasOfInterest)")
                     
                     
                     var areasOfInterestBool: Bool = false
@@ -200,12 +200,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     // if you select roads surrounding apple HQ produced nil error. Below checks for that
                     if pm.areasOfInterest != nil {
                         
-                        var arrCount = pm.areasOfInterest.count
+                        var arrCount = pm.areasOfInterest!.count
                         if arrCount == 0 {
                             inputString = ""
                         }
                         else {
-                            inputString = "\(pm.areasOfInterest[0])"
+                            inputString = "\(pm.areasOfInterest![0])"
                             areasOfInterestBool = true
                         }
                     }
@@ -218,12 +218,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                         self.locationString = "\(inputString) (\(address))"
                     }
                     
-                    println("location: \(self.locationString)")
+                    print("location: \(self.locationString)")
                     self.newAnotation.title = self.locationString
                 }
                 else
                 {
-                    println("Error with the data.")
+                    print("Error with the data.")
                 }
             })
             
@@ -234,7 +234,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
     }
     
-    //by default UIGR does not recognize simultaneous gestures and so the bool must be changed
+    //by default UIGestureRecognizer does not recognize simultaneous gestures and so the bool must be changed
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
             
         if gestureRecognizer is UILongPressGestureRecognizer {
@@ -246,34 +246,34 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
 
     //for determining the location of the user
-    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         
-        CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: {(placemarks, error)->Void in
+        CLGeocoder().reverseGeocodeLocation(manager.location!, completionHandler: {(placemarks, error)->Void in
             
             if (error != nil)
             {
-                println("Error: " + error.localizedDescription)
+                print("Error: " + error!.localizedDescription)
                 return
             }
             
-            if placemarks.count > 0
+            if placemarks!.count > 0
             {
-                let pm = placemarks[0] as! CLPlacemark
+                let pm = placemarks![0] as! CLPlacemark
                 self.displayUserLocation(pm)
                 
             }
             else
             {
-                println("Error with the data.")
+                print("Error with the data.")
             }
         })
     }
     
     //in case of an error (kind of like "super" used in classes in java
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!)
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError)
     {
-        println("Error: " + error.localizedDescription)
+        print("Error: " + error.localizedDescription)
     }
     
     func displayUserLocation(placemark: CLPlacemark)
@@ -296,7 +296,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         //sets region to focus on for mapview
         let region = MKCoordinateRegionMakeWithDistance(
-            placemark.location.coordinate, 2000, 2000)
+            placemark.location!.coordinate, 2000, 2000)
         
         //animates the "zooming" and "panning" to the region to focus on
         locationMapViewer.setRegion(region, animated: true)
@@ -348,17 +348,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 
                 if (error != nil)
                 {
-                    println("Error: " + error.localizedDescription)
+                    print("Error: " + error!.localizedDescription)
                     return
                 }
                 
-                if placemarks.count > 0
+                if placemarks!.count > 0
                 {
-                    let pm = placemarks[0] as! CLPlacemark
+                    let pm = placemarks![0] as! CLPlacemark
                     
-                    let address = ABCreateStringWithAddressDictionary(pm.addressDictionary, false);
+                    let address = ABCreateStringWithAddressDictionary(pm.addressDictionary!, false);
                     
-                    println("\(pm.areasOfInterest)")
+                    print("\(pm.areasOfInterest)")
                     
                     
                     var areasOfInterestBool: Bool = false
@@ -367,12 +367,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     // if you select roads surrounding apple HQ produced nil error. Below checks for that
                     if pm.areasOfInterest != nil {
                         
-                        var arrCount = pm.areasOfInterest.count
+                        var arrCount = pm.areasOfInterest!.count
                         if arrCount == 0 {
                             inputString = ""
                         }
                         else {
-                            inputString = "\(pm.areasOfInterest[0])"
+                            inputString = "\(pm.areasOfInterest![0])"
                             areasOfInterestBool = true
                         }
                     }
@@ -385,19 +385,19 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                         self.locationString = "\(inputString) (\(address))"
                     }
                     
-                    println("location: \(self.locationString)")
+                    print("location: \(self.locationString)")
                     self.newAnotation.title = self.locationString
                 }
                 else
                 {
-                    println("Error with the data.")
+                    print("Error with the data.")
                 }
             })
         }
         
         //renable the panning and rotate gestures on the end state of the longpress event
         else if gestureRecognizer.state == .Ended {
-            println("cancelled touches")
+            print("cancelled touches")
             locationMapViewer.addGestureRecognizer(rotateGesture)
             locationMapViewer.addGestureRecognizer(panningSwipe)
             locationMapViewer.scrollEnabled = true
@@ -459,7 +459,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             locationMapViewer.setUserTrackingMode(MKUserTrackingMode.FollowWithHeading, animated: true)
             
         default:
-            println("println")
+            print("println")
         }
     }
     

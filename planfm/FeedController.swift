@@ -32,7 +32,7 @@ class FeedController: UIViewController {
 
     @IBAction func editingWhen(sender: UITextField) {
         
-        var datePickerView:UIDatePicker = UIDatePicker()
+        let datePickerView:UIDatePicker = UIDatePicker()
         datePickerView.datePickerMode = UIDatePickerMode.DateAndTime
         sender.inputView = datePickerView
         datePickerView.addTarget(self, action: Selector("datePickerValueChanged:"), forControlEvents: UIControlEvents.ValueChanged)
@@ -40,13 +40,13 @@ class FeedController: UIViewController {
     }
     
     func datePickerValueChanged (sender:UIDatePicker) {
-        var dateformatter = NSDateFormatter()
+        let dateformatter = NSDateFormatter()
         dateformatter.dateStyle = NSDateFormatterStyle.FullStyle
         dateformatter.dateFormat = "EEE, MMM d h:mm a"
         planDateTime.text = dateformatter.stringFromDate(sender.date)
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }
     
