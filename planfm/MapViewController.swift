@@ -128,7 +128,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     //for pin drop
     func mapView(mapView: MKMapView,
-        viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView! {
+        viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
             
             if annotation is MKUserLocation {
                 //return nil so map view draws "blue dot" for standard user location
@@ -171,10 +171,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             annotationDragState = false
             
             //convert coordinates to a CLLocation
-            var getLat: CLLocationDegrees = newAnotation.coordinate.latitude
-            var getLon: CLLocationDegrees = newAnotation.coordinate.longitude
+            let getLat: CLLocationDegrees = newAnotation.coordinate.latitude
+            let getLon: CLLocationDegrees = newAnotation.coordinate.longitude
             
-            var pinLocation: CLLocation =  CLLocation(latitude: getLat, longitude: getLon)
+            let pinLocation: CLLocation =  CLLocation(latitude: getLat, longitude: getLon)
             
             //Reverse Geo decoder (convert coordinates to nearest(?) address
             CLGeocoder().reverseGeocodeLocation(pinLocation, completionHandler: {(placemarks, error)->Void in
@@ -187,7 +187,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 
                 if placemarks!.count > 0
                 {
-                    let pm = placemarks![0] as! CLPlacemark
+                    let pm = placemarks![0]
                     
                     let address = ABCreateStringWithAddressDictionary(pm.addressDictionary!,!false);
                     
@@ -200,7 +200,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     // if you select roads surrounding apple HQ produced nil error. Below checks for that
                     if pm.areasOfInterest != nil {
                         
-                        var arrCount = pm.areasOfInterest!.count
+                        let arrCount = pm.areasOfInterest!.count
                         if arrCount == 0 {
                             inputString = ""
                         }
@@ -259,7 +259,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             
             if placemarks!.count > 0
             {
-                let pm = placemarks![0] as! CLPlacemark
+                let pm = placemarks![0] 
                 self.displayUserLocation(pm)
                 
             }
@@ -322,8 +322,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             locationMapViewer.removeAnnotations( annotationsToRemove )
             
             //get the touch event and convert to coordinates (lat and long)
-            var touchPoint = gestureRecognizer.locationInView(self.locationMapViewer)
-            var newCoord:CLLocationCoordinate2D = locationMapViewer.convertPoint(touchPoint, toCoordinateFromView: self.locationMapViewer)
+            let touchPoint = gestureRecognizer.locationInView(self.locationMapViewer)
+            let newCoord:CLLocationCoordinate2D = locationMapViewer.convertPoint(touchPoint, toCoordinateFromView: self.locationMapViewer)
             
             //annotation generation
             newAnotation.coordinate = newCoord
@@ -338,10 +338,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             
             
             //convert coordinates to a CLLocation
-            var getLat: CLLocationDegrees = newAnotation.coordinate.latitude
-            var getLon: CLLocationDegrees = newAnotation.coordinate.longitude
+            let getLat: CLLocationDegrees = newAnotation.coordinate.latitude
+            let getLon: CLLocationDegrees = newAnotation.coordinate.longitude
             
-            var pinLocation: CLLocation =  CLLocation(latitude: getLat, longitude: getLon)
+            let pinLocation: CLLocation =  CLLocation(latitude: getLat, longitude: getLon)
             
             //Reverse Geo decoder (convert coordinates to nearest(?) address
             CLGeocoder().reverseGeocodeLocation(pinLocation, completionHandler: {(placemarks, error)->Void in
@@ -354,7 +354,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 
                 if placemarks!.count > 0
                 {
-                    let pm = placemarks![0] as! CLPlacemark
+                    let pm = placemarks![0]
                     
                     let address = ABCreateStringWithAddressDictionary(pm.addressDictionary!, false);
                     
@@ -367,7 +367,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     // if you select roads surrounding apple HQ produced nil error. Below checks for that
                     if pm.areasOfInterest != nil {
                         
-                        var arrCount = pm.areasOfInterest!.count
+                        let arrCount = pm.areasOfInterest!.count
                         if arrCount == 0 {
                             inputString = ""
                         }
